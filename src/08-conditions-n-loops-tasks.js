@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-plusplus */
 /* *************************************************************************************************
  *                                                                                                *
  * Plese read the following tutorial before implementing tasks:                                   *
@@ -198,8 +200,16 @@ function isInsideCircle(/* circle, point */) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  const countedLetters = str.split('').reduce((allNames, name) => {
+    if (name in allNames) {
+      allNames[name]++;
+    } else {
+      allNames[name] = 1;
+    }
+    return allNames;
+  }, {});
+  return Object.keys(countedLetters).find((key) => countedLetters[key] === 1);
 }
 
 
@@ -247,7 +257,7 @@ function reverseString(str) {
   //   const newArr = str.split(' ');
   //   newArr.map((word))
   // }
-  return str.split('').reverse.join('');
+  return str.split('').reverse().join('');
 }
 
 
@@ -263,8 +273,8 @@ function reverseString(str) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  return parseInt(num.toString().split('').reverse().join(''), 10);
 }
 
 
