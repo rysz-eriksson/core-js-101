@@ -19,8 +19,8 @@
  *    'Tue, 26 Jan 2016 13:48:02 GMT' => Date()
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
-function parseDataFromRfc2822(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromRfc2822(value) {
+  return Date.parse(value);
 }
 
 /**
@@ -34,8 +34,8 @@ function parseDataFromRfc2822(/* value */) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return Date.parse(value);
 }
 
 
@@ -53,8 +53,16 @@ function parseDataFromIso8601(/* value */) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const year = date.getFullYear();
+  if (year % 4 !== 0) {
+    return false;
+  } if (year % 100 !== 0) {
+    return true;
+  } if (year % 400 !== 0) {
+    return false;
+  }
+  return true;
 }
 
 
@@ -73,8 +81,17 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  const duration = endDate.getTime() - startDate.getTime();
+  let seconds = ((duration / 1000) % 60).toFixed(3);
+  let minutes = Math.floor((duration / (1000 * 60)) % 60);
+  let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+  hours = (hours < 10) ? `0${hours}` : hours;
+  minutes = (minutes < 10) ? `0${minutes}` : minutes;
+  seconds = (seconds < 10) ? `0${seconds}` : seconds;
+
+  return `${hours}:${minutes}:${seconds}`;
 }
 
 
@@ -94,10 +111,30 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const fuckingDate = new Date(date - 7200000);
+  const hour = fuckingDate.getHours();
+  const minute = fuckingDate.getMinutes();
+  let degressOffsetHours = 0;
+  if (hour > 0 && hour < 12) {
+    degressOffsetHours = hour * 30;
+  }
+  if (hour > 12 && hour < 24) {
+    degressOffsetHours = (hour - 12) * 30;
+  }
+  const degreesOffsetMinutes = minute === 60 || minute === 0 ? 0 : hour * 6;
+  // console.log(fuckingDate, hour, minute, degressOffsetHours, degreesOffsetMinutes);
+  const degreesDifference = degressOffsetHours - degreesOffsetMinutes;
+  // const degreesDifference = degressOffsetHours > degreesOffsetMinutes
+  //   ? degressOffsetHours - degreesOffsetMinutes : degreesOffsetMinutes - degressOffsetHours;
+  let result = degreesDifference * (Math.PI / 180);
+  if (result < 0) {
+    result = -result;
+  }
+  return result;
 }
 
+// angleBetweenClockHands(Date.UTC(2016, 3, 5, 15, 0));
 
 module.exports = {
   parseDataFromRfc2822,
