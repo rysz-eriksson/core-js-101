@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 /* ************************************************************************************************
  *                                                                                                *
  * Plese read the following tutorial before implementing tasks:                                   *
@@ -57,8 +58,15 @@ function getJSON(obj) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const obj = JSON.parse(json);
+  const newObject = Object.create(proto);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const property in obj) {
+    newObject[property] = obj[property];
+  }
+
+  return newObject;
 }
 
 
